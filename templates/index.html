@@ -78,9 +78,14 @@
           </div>
         </div>
 
-        <!-- Quick Category Tags -->
-        <div class="category-pills" id="categoryPills">
-          <!-- Dynamically populated via JS -->
+        <!-- Quick Category Tags & Export Bar -->
+        <div class="controls-bottom-row">
+          <div class="category-pills" id="categoryPills">
+            <!-- Dynamically populated via JS -->
+          </div>
+          <button class="btn btn-secondary btn-export" id="btnExportCsv" title="Export matching quotes to CSV">
+            <span class="icon">📥</span> Export to CSV
+          </button>
         </div>
       </div>
     </section>
@@ -89,7 +94,9 @@
     <section class="results-section" id="resultsSection" style="display: none;">
       <div class="results-header">
         <h2 id="resultsHeading">Quotes Found</h2>
-        <span class="results-count" id="resultsCount">0 quotes</span>
+        <div class="results-header-right">
+          <span class="results-count" id="resultsCount">0 quotes</span>
+        </div>
       </div>
       <div class="quotes-grid" id="quotesGrid">
         <!-- Dynamically populated quote cards -->

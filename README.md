@@ -96,6 +96,7 @@ Open your browser and navigate to:
 | `GET` | `/api/quotes` | Get all quotes | None |
 | `GET` | `/api/quotes/random` | Get a random quote | `category` *(optional)*, `author` *(optional)* |
 | `GET` | `/api/quotes/search` | Search quotes | `q` *(keyword)*, `category`, `author` |
+| `GET` | `/api/quotes/export/csv` | Export quotes as CSV file | `q`, `category`, `author` |
 | `GET` | `/api/categories` | List all unique categories & counts | None |
 | `GET` | `/api/authors` | List all unique authors & counts | None |
 

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const quoteId = document.getElementById('quoteId');
   const btnNewRandom = document.getElementById('btnNewRandom');
   const btnCopyQuote = document.getElementById('btnCopyQuote');
+  const btnExportCsv = document.getElementById('btnExportCsv');
   
   const searchInput = document.getElementById('searchInput');
   const btnClearSearch = document.getElementById('btnClearSearch');
@@ -45,13 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnCopyQuote.addEventListener('click', () => {
       if (!currentQuote) return;
-      const textToCopy = `"${currentQuote.quote}" — ${currentQuote.author}`;
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        showToast('Quote copied to clipboard! 📋');
-      }).catch(() => {
-        showToast('Failed to copy quote', true);
-      });
+      copyQuoteToClipboard(currentQuote.quote, currentQuote.author);
     });
+
+    if (btnExportCsv) {
+      btnExportCsv.addEventListener('click', () => {
+        exportQuotesToCsv();
+      });
+    }
 
     searchInput.addEventListener('input', () => {
       const val = searchInput.value.trim();
@@ -77,6 +79,36 @@ document.addEventListener('DOMContentLoaded', () => {
     authorSelect.addEventListener('change', () => {
       performSearch();
     });
+  }
+
+  // Helper to copy text to clipboard
+  function copyQuoteToClipboard(quote, author) {
+    const textToCopy = `"${quote}" — ${author}`;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast('Quote copied to clipboard! 📋');
+    }).catch(() => {
+      showToast('Failed to copy quote', true);
+    });
+  }
+
+  // Export quotes to CSV based on current filters
+  function exportQuotesToCsv() {
+    const q = searchInput.value.trim();
+    const category = categorySelect.value;
+    const author = authorSelect.value;
+
+    const params = new URLSearchParams();
+    if (q) params.append('q', q);
+    if (category) params.append('category', category);
+    if (author) params.append('author', author);
+
+    let exportUrl = '/api/quotes/export/csv';
+    if ([...params].length > 0) {
+      exportUrl += `?${params.toString()}`;
+    }
+
+    showToast('Exporting quotes to CSV... 📥');
+    window.location.href = exportUrl;
   }
 
   // Fetch and display a random quote
@@ -244,16 +276,41 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('div');
       card.className = 'grid-card';
       card.innerHTML = `
-        <div class="grid-card-text">“${escapeHtml(quote.quote)}”</div>
+        <div class="grid-card-body">
+          <div class="grid-card-text">“${escapeHtml(quote.quote)}”</div>
+        </div>
         <div class="grid-card-footer">
-          <span class="grid-card-author">— ${escapeHtml(quote.author)}</span>
-          <span class="grid-card-cat">${escapeHtml(quote.category)}</span>
+          <div class="grid-card-meta">
+            <span class="grid-card-author">— ${escapeHtml(quote.author)}</span>
+            <span class="grid-card-cat">${escapeHtml(quote.category)}</span>
+          </div>
+          <button class="grid-card-copy-btn" title="Copy quote to clipboard" aria-label="Copy quote">
+            <span class="copy-icon">📋</span>
+            <span class="copy-text">Copy</span>
+          </button>
         </div>
       `;
+
+      // Copy button event listener
+      const copyBtn = card.querySelector('.grid-card-copy-btn');
+      copyBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Don't trigger card selection
+        copyQuoteToClipboard(quote.quote, quote.author);
+        copyBtn.classList.add('copied');
+        const textSpan = copyBtn.querySelector('.copy-text');
+        if (textSpan) textSpan.textContent = 'Copied!';
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          if (textSpan) textSpan.textContent = 'Copy';
+        }, 1800);
+      });
+
+      // Card click triggers main view
       card.addEventListener('click', () => {
         displayQuote(quote);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+
       quotesGrid.appendChild(card);
     });
   }

@@ -99,3 +99,25 @@ def test_authors_endpoint(client):
     assert len(data) > 0
     author_names = [a['name'] for a in data]
     assert 'Albert Einstein' in author_names
+
+def test_export_quotes_csv_all(client):
+    """Verify CSV export for all quotes."""
+    response = client.get('/api/quotes/export/csv')
+    assert response.status_code == 200
+    assert response.mimetype == 'text/csv'
+    assert 'attachment; filename="quotes.csv"' in response.headers.get('Content-Disposition', '')
+    csv_text = response.data.decode('utf-8')
+    lines = csv_text.strip().splitlines()
+    assert len(lines) == 101  # 1 header + 100 quotes
+    assert lines[0] == 'ID,Quote,Author,Category,Tags'
+
+def test_export_quotes_csv_filtered(client):
+    """Verify CSV export with filters."""
+    response = client.get('/api/quotes/export/csv?category=Science&author=Einstein')
+    assert response.status_code == 200
+    csv_text = response.data.decode('utf-8')
+    lines = csv_text.strip().splitlines()
+    assert len(lines) > 1  # Header + at least one match
+    for line in lines[1:]:
+        assert 'Einstein' in line
+
