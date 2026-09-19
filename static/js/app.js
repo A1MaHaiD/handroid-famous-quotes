@@ -22,12 +22,43 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultsCount = document.getElementById('resultsCount');
   const toast = document.getElementById('toast');
 
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const themeToggleIcon = document.getElementById('themeToggleIcon');
+  const themeToggleLabel = document.getElementById('themeToggleLabel');
+
   let currentQuote = null;
   let activeCategory = '';
   let searchDebounceTimer = null;
 
   // Initialize App
+  initTheme();
   init();
+
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (themeToggleIcon && themeToggleLabel) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleLabel.textContent = 'Light';
+      } else {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleLabel.textContent = 'Dark';
+      }
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const nextTheme = current === 'light' ? 'dark' : 'light';
+    applyTheme(nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    showToast(`Switched to ${nextTheme} mode ✨`);
+  }
 
   async function init() {
     await Promise.all([
@@ -40,6 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Event Listeners Setup
   function setupEventListeners() {
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+
     btnNewRandom.addEventListener('click', () => {
       fetchRandomQuote(activeCategory, authorSelect.value);
     });
