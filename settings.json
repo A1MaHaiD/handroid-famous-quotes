@@ -1,0 +1,13 @@
+{
+      "colorScheme": "default",
+      "model": "Gemini 3.8 Flash (Medium)",
+      "statusLine": {
+        "type": "",
+        "command": "",
+        "enabled": true
+      },
+      "trustedWorkspaces": [
+        "/home/olexander/Projects/Antigravity_Gen/agy-cli-projects"
+      ]
+    }
+

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Famous Quotes Explorer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <span class="logo-icon">“</span>
+        <h1>Wisdom Vault</h1>
+      </div>
+      <p class="subtitle">Explore 100 timeless quotes by influential thinkers, scientists, and leaders</p>
+    </header>
+
+    <!-- Main Featured Random Quote Card -->
+    <section class="featured-section">
+      <div class="quote-card" id="quoteCard">
+        <div class="quote-card-header">
+          <span class="category-badge" id="quoteCategory">Inspiration</span>
+          <span class="quote-id-badge" id="quoteId">#1</span>
+        </div>
+        
+        <div class="quote-content">
+          <span class="big-quote-mark start">“</span>
+          <blockquote id="quoteText">The only way to do great work is to love what you do.</blockquote>
+          <span class="big-quote-mark end">”</span>
+        </div>
+
+        <div class="quote-card-footer">
+          <div class="quote-author-wrap">
+            <span class="author-dash">—</span>
+            <span class="quote-author" id="quoteAuthor">Steve Jobs</span>
+          </div>
+          
+          <div class="card-actions">
+            <button class="btn btn-secondary" id="btnCopyQuote" title="Copy quote to clipboard">
+              <span class="icon">📋</span> Copy
+            </button>
+            <button class="btn btn-primary" id="btnNewRandom" title="Fetch a new random quote">
+              <span class="icon">✨</span> New Quote
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search & Filter Controls -->
+    <section class="controls-section">
+      <div class="controls-card">
+        <div class="search-row">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Search by quote keyword or author name..." 
+              autocomplete="off"
+            >
+            <button class="clear-btn" id="btnClearSearch" title="Clear search" style="display: none;">✕</button>
+          </div>
+
+          <div class="filter-group">
+            <select id="categorySelect" class="filter-select" title="Filter by category">
+              <option value="">All Categories</option>
+            </select>
+
+            <select id="authorSelect" class="filter-select" title="Filter by author">
+              <option value="">All Authors</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quick Category Tags -->
+        <div class="category-pills" id="categoryPills">
+          <!-- Dynamically populated via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Search / Filter Results Section -->
+    <section class="results-section" id="resultsSection" style="display: none;">
+      <div class="results-header">
+        <h2 id="resultsHeading">Quotes Found</h2>
+        <span class="results-count" id="resultsCount">0 quotes</span>
+      </div>
+      <div class="quotes-grid" id="quotesGrid">
+        <!-- Dynamically populated quote cards -->
+      </div>
+    </section>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <p>Wisdom Vault • 100 Well-Known Quotes • Powered by Python Flask & Vanilla JavaScript</p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
